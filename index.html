@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lista de Produtos</title>
+    <style>
+      h1 {
+        display: block;
+        margin: 0 auto;
+        width: fit-content;
+        margin-top: 40px;
+      }
+      .produto {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 16px;
+        width: 200px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .produto img {
+        width: 100%;
+        max-width: 200px;
+        max-height: 150px;
+        height: auto;
+        border-radius: 8px;
+      }
+
+      .produto h2 {
+        font-size: 1.2rem;
+        margin: 8px 0;
+      }
+
+      .produto p {
+        font-size: 1rem;
+        color: #2d7d46;
+        font-weight: bold;
+      }
+
+      .produtos-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>VEJA TODOS OS PRODUTOS DISPONÍVEIS</h1>
+    <div class="produtos-container" id="produtosContainer"></div>
+
+    <script>
+      async function carregarProdutos() {
+        try {
+          const res = await fetch("https://dummyjson.com/products");
+          if (!res.ok) {
+            throw new Error(`Erro na requisição: ${res.statusText}`);
+          }
+
+          const data = await res.json();
+          const container = document.getElementById("produtosContainer");
+
+          // Pega apenas os 18 primeiros produtos
+          data.products.slice(0, 18).forEach((product) => {
+            const productElement = document.createElement("div");
+            productElement.classList.add("produto");
+
+            productElement.innerHTML = `
+            <img src="${product.images[0]}" alt="${product.title}" />
+            <h2>${product.title}</h2>
+            <p>R$ ${product.price.toFixed(2)}</p>
+          `;
+
+            container.appendChild(productElement);
+          });
+        } catch (error) {
+          console.error("Erro ao buscar os dados:", error);
+        }
+      }
+
+      carregarProdutos();
+    </script>
+  </body>
+</html>
